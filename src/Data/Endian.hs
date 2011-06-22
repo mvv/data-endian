@@ -1,6 +1,5 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 module Data.Endian (
     EndianSensitive(..),
