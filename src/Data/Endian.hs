@@ -13,6 +13,10 @@ module Data.Endian (
 import Data.Int
 import Data.Word
 import Data.Bits
+import Foreign.C.Types
+import System.Posix.Types (CSsize)
+
+#include <HsBaseConfig.h>
 
 -- | Raw, endian-sensitive data
 class EndianSensitive α where
@@ -89,4 +93,83 @@ instance EndianSensitive Int32 where
 instance EndianSensitive Int64 where
   swapEndian = fromIntegral . (swapEndian ∷ Word64 → Word64) . fromIntegral
   {-# INLINE swapEndian #-}
+
+instance EndianSensitive CShort where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_SHORT → HTYPE_SHORT)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CUShort where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UNSIGNED_SHORT → HTYPE_UNSIGNED_SHORT)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CInt where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_INT → HTYPE_INT)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CUInt where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UNSIGNED_INT → HTYPE_UNSIGNED_INT)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CLong where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_LONG → HTYPE_LONG)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CULong where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UNSIGNED_LONG → HTYPE_UNSIGNED_LONG)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+#ifdef HAVE_LONG_LONG
+instance EndianSensitive CLLong where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_LONG_LONG → HTYPE_LONG_LONG)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CULLong where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UNSIGNED_LONG_LONG
+                           → HTYPE_UNSIGNED_LONG_LONG)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+#endif
+
+instance EndianSensitive CSize where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_SIZE_T → HTYPE_SIZE_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CSsize where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_SSIZE_T → HTYPE_SSIZE_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+#ifdef HTYPE_WCHAR_T
+instance EndianSensitive CWchar where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_WCHAR_T → HTYPE_WCHAR_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+#endif
+
+#ifdef HTYPE_WINT_T
+instance EndianSensitive CWint where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_WINT_T → HTYPE_WINT_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+#endif
 
