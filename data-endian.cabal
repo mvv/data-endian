@@ -4,8 +4,7 @@ Category: Data
 Stability: experimental
 Synopsis: Endian-sensitive data
 Description:
-  This package provides helpers for converting and storing endian-sensitive
-  data.
+  This package provides helpers for converting endian-sensitive data.
 
 Homepage: https://github.com/mvv/data-endian
 Bug-Reports: https://github.com/mvv/data-endian/issues

@@ -3,8 +3,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Data.Endian (
-    LittleEndian(..),
-    BigEndian(..),
     EndianSensitive(..),
     toBigEndian,
     fromBigEndian,
@@ -15,14 +13,6 @@ module Data.Endian (
 import Data.Int
 import Data.Word
 import Data.Bits
-import Control.Applicative ((<$>))
-import Foreign.Storable (Storable(..))
-import Foreign.Ptr (castPtr)
-
--- | Big-endianness marker
-newtype BigEndian α    = BigEndian    { unBigEndian    ∷ α }
--- | Little-endianness marker
-newtype LittleEndian α = LittleEndian { unLittleEndian ∷ α }
 
 -- | Raw, endian-sensitive data
 class EndianSensitive α where
@@ -99,24 +89,4 @@ instance EndianSensitive Int32 where
 instance EndianSensitive Int64 where
   swapEndian = fromIntegral . (swapEndian ∷ Word64 → Word64) . fromIntegral
   {-# INLINE swapEndian #-}
-
-instance (EndianSensitive α, Storable α) ⇒ Storable (BigEndian α) where
-  alignment _ = alignment (undefined ∷ α)
-  {-# INLINE alignment #-}
-  sizeOf _    = sizeOf (undefined ∷ α)
-  {-# INLINE sizeOf #-}
-  peek        = (BigEndian . fromBigEndian <$>) . peek . castPtr
-  {-# INLINE peek #-}
-  poke p      = poke (castPtr p) . toBigEndian . unBigEndian
-  {-# INLINE poke #-}
-
-instance (EndianSensitive α, Storable α) ⇒ Storable (LittleEndian α) where
-  alignment _ = alignment (undefined ∷ α)
-  {-# INLINE alignment #-}
-  sizeOf _    = sizeOf (undefined ∷ α)
-  {-# INLINE sizeOf #-}
-  peek        = (LittleEndian . fromLittleEndian <$>) . peek . castPtr
-  {-# INLINE peek #-}
-  poke p      = poke (castPtr p) . toLittleEndian . unLittleEndian
-  {-# INLINE poke #-}
 
