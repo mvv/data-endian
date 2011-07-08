@@ -13,6 +13,7 @@ import Data.Int
 import Data.Word
 import Data.Bits
 import Foreign.C.Types
+import Foreign.Ptr (IntPtr, WordPtr)
 import System.Posix.Types (CSsize)
 
 #include <HsBaseConfig.h>
@@ -153,6 +154,48 @@ instance EndianSensitive CSize where
 instance EndianSensitive CSsize where
   swapEndian = fromIntegral
              . (swapEndian ∷ HTYPE_SSIZE_T → HTYPE_SSIZE_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CUIntPtr where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UINTPTR_T → HTYPE_UINTPTR_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CIntPtr where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_INTPTR_T → HTYPE_INTPTR_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CPtrdiff where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_PTRDIFF_T → HTYPE_PTRDIFF_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CUIntMax where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UINTMAX_T → HTYPE_UINTMAX_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive CIntMax where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_INTMAX_T → HTYPE_INTMAX_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive WordPtr where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_UINTPTR_T → HTYPE_UINTPTR_T)
+             . fromIntegral
+  {-# INLINE swapEndian #-}
+
+instance EndianSensitive IntPtr where
+  swapEndian = fromIntegral
+             . (swapEndian ∷ HTYPE_INTPTR_T → HTYPE_INTPTR_T)
              . fromIntegral
   {-# INLINE swapEndian #-}
 
