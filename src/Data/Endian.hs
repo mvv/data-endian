@@ -1,8 +1,9 @@
-{-# LANGUAGE UnicodeSyntax #-}
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE UnicodeSyntax, CPP #-}
 
 module Data.Endian (
     EndianSensitive(..),
+    BigEndian(),
+    LittleEndian(),
     toBigEndian,
     fromBigEndian,
     toLittleEndian,
@@ -16,6 +17,11 @@ import Foreign.C.Types
 import Foreign.Ptr (IntPtr, WordPtr)
 import System.Posix.Types (CSsize)
 
+-- | Wrapper, guaranteeing enclosed type is big-endian
+newtype BigEndian a = BE a
+-- | Wrapper, guaranteeing enclosed type is little-endian
+newtype LittleEndian a = LE a
+
 #include <HsBaseConfig.h>
 
 -- | Raw, endian-sensitive data
@@ -24,24 +30,29 @@ class EndianSensitive α where
   swapEndian ∷ α → α
 
 -- | Convert from the native format to big-endian
-toBigEndian      ∷ EndianSensitive α ⇒ α → α
+toBigEndian      ∷ EndianSensitive α ⇒ α → BigEndian α
 -- | Convert from big-endian to the native format
-fromBigEndian    ∷ EndianSensitive α ⇒ α → α
+fromBigEndian    ∷ EndianSensitive α ⇒ BigEndian α → α
 -- | Convert from the native format to little-endian
-toLittleEndian   ∷ EndianSensitive α ⇒ α → α
+toLittleEndian   ∷ EndianSensitive α ⇒ α → LittleEndian α
 -- | Convert from little-endian to the native format
-fromLittleEndian ∷ EndianSensitive α ⇒ α → α
+fromLittleEndian ∷ EndianSensitive α ⇒ LittleEndian α → α
+
+beHelp ∷ EndianSensitive α ⇒ α → α
+leHelp ∷ EndianSensitive α ⇒ α → α
 
 #ifdef WORDS_BIGENDIAN
-toBigEndian      = id
-toLittleEndian   = swapEndian
+beHelp = id
+leHelp = swapEndian
 #else
-toBigEndian      = swapEndian
-toLittleEndian   = id
+beHelp = swapEndian
+leHelp = id
 #endif
 
-fromBigEndian    = toBigEndian
-fromLittleEndian = toLittleEndian
+toBigEndian    = BE . beHelp
+toLittleEndian = LE . leHelp
+fromBigEndian    (BE a) = beHelp a
+fromLittleEndian (LE a) = leHelp a
 
 {-# INLINE toBigEndian #-}
 {-# INLINE fromBigEndian #-}
