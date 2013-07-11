@@ -28,4 +28,7 @@ Library
   GHC-Options: -Wall
   Exposed-Modules:
     Data.Endian
-
+    Data.Endian.Unsafe
+  Other-Modules:
+    Data.Endian.Internal
+    Data.Endian.Wrap
