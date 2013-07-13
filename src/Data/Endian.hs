@@ -1,7 +1,7 @@
 {-# LANGUAGE UnicodeSyntax, CPP #-}
 
 module Data.Endian (
-    EndianSensitive(..),
+    EndianSensitive(),
     BigEndian(),
     LittleEndian(),
     toBigEndian,

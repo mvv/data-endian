@@ -15,7 +15,7 @@ import System.Posix.Types (CSsize)
 
 -- | Raw, endian-sensitive data
 class EndianSensitive α where
-  -- | Change the endianness of the argument
+  -- | Invert the the endianness of the argument
   swapEndian ∷ α → α
 
 instance EndianSensitive α ⇒ EndianSensitive [α] where
