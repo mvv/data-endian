@@ -4,14 +4,15 @@ Category:            Data
 Stability:           experimental
 Synopsis:            Enforce endianness with types
 Description:
-  This package provides newtype wrappers for seperating data with specified
-  endianness from other data with normal, system-specific endianness of the same
-  type. Since these wrappers are newtypes, no runtime overhead occurs.
+  This package provides newtype wrappers for separating data with specified
+  endianness from other data of the same type with normal, system-specific
+  endianness. Since these wrappers are newtypes, no runtime overhead is
+  incurred.
 
-  Currently the underlying 'EndianSensitive' typeclass, and associated instances
-  is taken directly from the 'data-endian' package. However, if Haskell or GHC
-  ever gets a built-in equavlent, like as is proposed in
-  'http://ghc.haskell.org/trac/ghc/ticket/7902' , it should be trivial to update
+  Currently the underlying 'EndianSensitive' typeclass its instances are taken
+  directly from the 'data-endian' package. However, if Haskell or GHC ever gets
+  a built-in equivalent, like as is proposed in
+  'http://ghc.haskell.org/trac/ghc/ticket/7902', it should be trivial to update
   this to use that instead.
 
 Homepage:            https://github.com/Ericson2314/typesafe-endian
