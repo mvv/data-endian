@@ -11,7 +11,7 @@ Bug-Reports: https://github.com/mvv/data-endian/issues
 
 Author: Mikhail Vorozhtsov <mikhail.vorozhtsov@gmail.com>
 Maintainer: Mikhail Vorozhtsov <mikhail.vorozhtsov@gmail.com>
-Copyright: 2011 Mikhail Vorozhtsov <mikhail.vorozhtsov@gmail.com>
+Copyright: 2011-2014 Mikhail Vorozhtsov <mikhail.vorozhtsov@gmail.com>
 License: BSD3
 License-File: LICENSE
 
@@ -23,9 +23,8 @@ Source-Repository head
   Location: https://github.com/mvv/data-endian.git
 
 Library
-  Build-Depends: base < 5
+  Build-Depends: base >= 4 && < 5
   Hs-Source-Dirs: src
   GHC-Options: -Wall
   Exposed-Modules:
     Data.Endian
-

@@ -7,4 +7,3 @@ Installation
 The usual:
 
 	$ cabal install
-

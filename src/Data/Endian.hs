@@ -1,14 +1,27 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+#if MIN_VERSION_base(4,6,0)
+{-# LANGUAGE DeriveGeneric #-}
+#endif
 
-module Data.Endian (
-    EndianSensitive(..),
-    toBigEndian,
-    fromBigEndian,
-    toLittleEndian,
-    fromLittleEndian
+module Data.Endian
+  ( Endian(..)
+  , isLittleEndian
+  , isBigEndian
+  , EndianSensitive(..)
+  , toLittleEndian
+  , fromLittleEndian
+  , toBigEndian
+  , fromBigEndian
   ) where
 
+import Data.Typeable (Typeable)
+import Data.Data (Data)
+#if MIN_VERSION_base(4,6,0)
+import GHC.Generics (Generic)
+#endif
+import Data.Ix (Ix)
 import Data.Int
 import Data.Word
 import Data.Bits
@@ -18,35 +31,54 @@ import System.Posix.Types (CSsize)
 
 #include <HsBaseConfig.h>
 
--- | Raw, endian-sensitive data
+-- | Endianness.
+data Endian = LittleEndian -- ^ Little-endian
+            | BigEndian    -- ^ Big-endian
+            deriving (Typeable, Data, Show, Read,
+#if MIN_VERSION_base(4,6,0)
+                      Generic,
+#endif
+                      Eq, Ord, Bounded, Enum, Ix)
+
+-- | Return 'True' if the supplied value is 'LittleEndian'.
+isLittleEndian ∷ Endian → Bool
+isLittleEndian LittleEndian = True
+isLittleEndian BigEndian    = False
+
+-- | Return 'True' if the supplied value is 'BigEndian'.
+isBigEndian ∷ Endian → Bool
+isBigEndian LittleEndian = False
+isBigEndian BigEndian    = True
+
+-- | Raw, endian-sensitive data.
 class EndianSensitive α where
-  -- | Change the endianness of the argument
+  -- | Change the endianness of the argument.
   swapEndian ∷ α → α
 
--- | Convert from the native format to big-endian
-toBigEndian      ∷ EndianSensitive α ⇒ α → α
--- | Convert from big-endian to the native format
-fromBigEndian    ∷ EndianSensitive α ⇒ α → α
--- | Convert from the native format to little-endian
+-- | Convert from the native format to little-endian.
 toLittleEndian   ∷ EndianSensitive α ⇒ α → α
--- | Convert from little-endian to the native format
+-- | Convert from little-endian to the native format.
 fromLittleEndian ∷ EndianSensitive α ⇒ α → α
+-- | Convert from the native format to big-endian.
+toBigEndian      ∷ EndianSensitive α ⇒ α → α
+-- | Convert from big-endian to the native format.
+fromBigEndian    ∷ EndianSensitive α ⇒ α → α
 
 #ifdef WORDS_BIGENDIAN
-toBigEndian      = id
 toLittleEndian   = swapEndian
+toBigEndian      = id
 #else
-toBigEndian      = swapEndian
 toLittleEndian   = id
+toBigEndian      = swapEndian
 #endif
 
-fromBigEndian    = toBigEndian
 fromLittleEndian = toLittleEndian
+fromBigEndian    = toBigEndian
 
-{-# INLINE toBigEndian #-}
-{-# INLINE fromBigEndian #-}
 {-# INLINE toLittleEndian #-}
 {-# INLINE fromLittleEndian #-}
+{-# INLINE toBigEndian #-}
+{-# INLINE fromBigEndian #-}
 
 instance EndianSensitive α ⇒ EndianSensitive [α] where
   swapEndian = map swapEndian
@@ -214,4 +246,3 @@ instance EndianSensitive CWint where
              . fromIntegral
   {-# INLINE swapEndian #-}
 #endif
-
