@@ -14,6 +14,8 @@ module Data.Endian
   , fromLittleEndian
   , toBigEndian
   , fromBigEndian
+  , toEndian
+  , fromEndian
   ) where
 
 import Data.Typeable (Typeable)
@@ -79,6 +81,16 @@ fromBigEndian    = toBigEndian
 {-# INLINE fromLittleEndian #-}
 {-# INLINE toBigEndian #-}
 {-# INLINE fromBigEndian #-}
+
+-- | Convert from the native format to the specified endianness.
+toEndian ∷ EndianSensitive α ⇒ Endian → α → α
+toEndian LittleEndian = toLittleEndian
+toEndian BigEndian    = toBigEndian
+
+-- | Convert from the specified endianness to the native format.
+fromEndian ∷ EndianSensitive α ⇒ Endian → α → α
+fromEndian = toEndian
+{-# INLINE fromEndian #-}
 
 instance EndianSensitive α ⇒ EndianSensitive [α] where
   swapEndian = map swapEndian
